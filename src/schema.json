@@ -1,0 +1,155 @@
+{
+  "$id": "metron.schema.json",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Person",
+  "type": "object",
+  "default": {},
+  "requiredProperties": [
+    "cities",
+    "cityWeather",
+    "users"
+  ],
+  "properties": {
+    "cities": {
+      "type": "object",
+      "default": {},
+      "blacklist": true,
+      "resource": {
+        "name": "cities",
+        "idKey": "id",
+        "model": "city"
+      },
+      "patternProperties": {
+        ".*": {
+          "$ref": "#/definitions/city"
+        }
+      }
+    },
+    "weather": {
+      "type": "object",
+      "default": {},
+      "requiredProperties": [
+        "cities"
+      ],
+      "properties": {
+        "cities": {
+          "type": "object",
+          "default": {},
+          "resource": {
+            "name": "cityWeather",
+            "idKey": "id",
+            "model": "cityWeatherReport"
+          },
+          "patternProperties": {
+            ".*": {
+              "$ref": "#/definitions/cityWeatherReport"
+            }
+          }
+        }
+      }
+    },
+    "users": {
+      "type": "object",
+      "default": {},
+      "resource": {
+        "name": "users",
+        "idKey": "uuid",
+        "model": "user"
+      },
+      "patternProperties": {
+        ".*": {
+          "$ref": "#/definitions/user"
+        }
+      }
+    },
+    "views": {
+      "type": "object",
+      "default": {},
+      "properties": {
+        "currentUser": {
+          "type": "string",
+          "default": "",
+          "resource": {
+            "name": "currentUser"
+          },
+          "oneOf": [
+            {
+              "const": ""
+            },
+            {
+              "format": "uuid"
+            }
+          ]
+        },
+        "currentCity": {
+          "type": "string",
+          "default": "",
+          "resource": "currentCity"
+        },
+        "citySearchIds": {
+          "type": "array",
+          "default": [],
+          "resource": "citySearchIds"
+        },
+        "openWeatherKey": {
+          "type": "string",
+          "default": "",
+          "resource": "openWeatherKey"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "city": {
+      "type": "object",
+      "default": {},
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "country": {
+          "type": "string",
+          "minLength": 1
+        },
+        "coord": {
+          "type": "object",
+          "properties": {
+            "lat": {
+              "type": "number",
+              "minimum": -90,
+              "maximum": 90
+            },
+            "lon": {
+              "type": "number",
+              "minimum": -180,
+              "maximum": 180
+            }
+          }
+        }
+      }
+    },
+    "cityWeatherReport": {
+      "type": "object",
+      "default": {}
+    },
+    "user": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "handle": {
+          "type": "string",
+          "minLength": 1
+        },
+        "uuid": {
+          "type": "string",
+          "format": "uuid"
+        }
+      }
+    }
+  }
+}
